@@ -1,0 +1,13 @@
+{
+  "name": "gateway",
+  "version": "1.0.0",
+  "private": true,
+  "main": "send-message.js",
+  "scripts": {
+    "test": "node send-message.js test-id +19876543210 'Test message'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "description": ""
+}
