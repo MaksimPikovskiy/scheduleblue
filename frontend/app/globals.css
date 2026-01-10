@@ -268,9 +268,44 @@
   border-color: var(--color-xp-blue-border);
 }
 
+/* Filter Buttons */
+.filter-btn {
+  @apply px-4 py-2 text-sm font-bold rounded border-2 cursor-pointer shadow-md;
+}
+
+.filter-btn.active {
+  @apply text-white;
+  background-color: var(--color-xp-blue);
+  border-color: var(--color-xp-blue);
+}
+
+.filter-btn.inactive {
+  @apply text-black;
+  background: linear-gradient(
+    to bottom,
+    var(--color-xp-beige),
+    var(--color-xp-beige-dark)
+  );
+  border-color: var(--color-xp-blue-border);
+}
+
+.filter-btn:hover {
+  @apply shadow-sm;
+}
+
+.filter-buttons {
+  @apply mb-4 flex gap-2 flex-wrap;
+}
+
 /* Messages List */
 .messages-list {
   @apply flex flex-col gap-2 min-h-96 h-96 max-h-96 overflow-y-auto pr-2;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-xp-blue-border) var(--color-xp-beige);
+}
+
+.messages-list-large {
+  @apply flex flex-col gap-2 min-h-[18rem] max-h-[18rem] overflow-y-auto pr-2;
   scrollbar-width: thin;
   scrollbar-color: var(--color-xp-blue-border) var(--color-xp-beige);
 }
@@ -338,6 +373,43 @@
   background-color: var(--color-status-failed-bg);
   color: var(--color-status-failed-text);
   border-color: var(--color-status-failed-border);
+}
+
+/* Stats Grid */
+.stats-grid {
+  @apply mb-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4;
+}
+
+.stat-card {
+  @apply p-4 rounded border-2 shadow-lg;
+  background: linear-gradient(
+    to bottom,
+    var(--color-xp-white),
+    var(--color-xp-beige)
+  );
+  border-color: var(--color-xp-blue-border);
+}
+
+.stat-label {
+  @apply text-xs mb-1;
+  color: var(--color-xp-gray-dark);
+}
+
+.stat-value {
+  @apply text-2xl font-bold;
+  color: var(--color-xp-blue-text);
+}
+
+.stat-value-yellow {
+  @apply text-yellow-700;
+}
+
+.stat-value-green {
+  @apply text-green-700;
+}
+
+.stat-value-red {
+  @apply text-red-700;
 }
 
 /* Utility Classes */
