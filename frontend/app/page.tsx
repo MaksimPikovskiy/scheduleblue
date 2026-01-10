@@ -5,12 +5,14 @@ import { toast } from "sonner";
 import { getMessages, createMessage, type Message } from "@/lib/api";
 import { getStatusColor } from "@/lib/utils";
 import { WindowTitleBar } from "@/components/ui/window-title-bar";
+import parsePhoneNumberFromString, { isValidPhoneNumber } from "libphonenumber-js";
 
 export default function Home() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [messageBody, setMessageBody] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [phoneError, setPhoneError] = useState<string>("");
 
   const fetchMessages = async () => {
     try {
@@ -31,7 +33,15 @@ export default function Home() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (!isValidPhoneNumber(phoneNumber)) {
+      setPhoneError("Please enter a valid international phone number (e.g., +15551234567 or +442071234567)");
+      toast.error("Invalid phone number format");
+      return;
+    }
+
     setIsLoading(true);
+    setPhoneError("");
 
     try {
       const newMessage = await createMessage({
@@ -53,6 +63,7 @@ export default function Home() {
   const handleReset = () => {
     setPhoneNumber("");
     setMessageBody("");
+    setPhoneError("");
   };
 
   return (
@@ -74,12 +85,20 @@ export default function Home() {
                   <input
                     id="phoneNumber"
                     type="tel"
-                    placeholder="+1 (555) 000-0000"
+                    placeholder="+1 (555) 123-4567"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     required
-                    className="form-input"
+                    className={`form-input ${phoneError ? 'error' : ''}`}
                   />
+                  {phoneError ? (
+                    <span className="text-xs mt-1 block" style={{ color: 'var(--color-status-failed-text)' }}>
+                      {phoneError}
+                    </span>) : (
+                    <span className="text-xs mt-1 block" style={{ color: 'var(--color-xp-gray-dark)' }}>
+                      Enter a valid international phone number (e.g., +15551234567 or +442071234567)
+                    </span>
+                  )}
                 </div>
                 <div className="form-group">
                   <label htmlFor="message" className="form-label">
@@ -120,25 +139,29 @@ export default function Home() {
                 <span>({messages.length})</span>
               </div>
               <div className="messages-list">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className="message-card"
-                  >
-                    <div className="message-header">
-                      <span className="message-phone">{message.to}</span>
-                      <span className={`status-badge ${getStatusColor(message.status)}`}>
-                        {message.status}
-                      </span>
+                {messages.map((message) => {
+                  const phoneNumber = parsePhoneNumberFromString(message.to);
+
+                  return (
+                    <div
+                      key={message.id}
+                      className="message-card"
+                    >
+                      <div className="message-header">
+                        <span className="message-phone">{phoneNumber?.formatInternational() || message.to}</span>
+                        <span className={`status-badge ${getStatusColor(message.status)}`}>
+                          {message.status}
+                        </span>
+                      </div>
+                      <p className="message-body">{message.body}</p>
+                      <p className="message-footer">
+                        {new Date(message.createdAt).toLocaleString()}
+                      </p>
                     </div>
-                    <p className="message-body">{message.body}</p>
-                    <p className="message-footer">
-                      {new Date(message.createdAt).toLocaleString()}
-                    </p>
-                  </div>
-                ))}
+                  )
+                })}
                 {messages.length === 0 && (
-                  <div className="text-center text-empty text-italic">
+                  <div className="text-center text-empty italic">
                     No scheduled messages yet
                   </div>
                 )}

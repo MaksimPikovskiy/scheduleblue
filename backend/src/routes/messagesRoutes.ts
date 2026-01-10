@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
 import prisma from '../prisma';
+import { formatPhoneNumber } from '../../lib/utils';
 
 const router: Router = express.Router();
 
@@ -15,11 +16,23 @@ router.post("/", async (req, res) => {
         return res.status(400).json({ error: "Missing required fields: to, body" });
     }
 
+    const phoneNumber = formatPhoneNumber(to);
+
+    if (!phoneNumber) {
+        return res.status(400).json({
+            error: "Invalid phone number format. Please enter a valid international phone number (e.g., +15551234567 or +442071234567)"
+        });
+    }
+
+    if (typeof body !== 'string' || !body.trim()) {
+        return res.status(400).json({ error: "Message body cannot be empty" });
+    }
+
     try {
         const newMessage = await prisma.message.create({
             data: {
-                to: to,
-                body: body
+                to: phoneNumber,
+                body: body.trim()
             }
         });
         res.status(201).json(newMessage);
