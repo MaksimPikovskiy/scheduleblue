@@ -1,26 +1,517 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Windows XP Custom Colors */
+  --color-xp-blue: #0053ee;
+  --color-xp-blue-dark: #0050ee;
+  --color-xp-blue-light: #245edc;
+  --color-xp-blue-bright: #5296e8;
+  --color-xp-blue-title: #0997ff;
+  --color-xp-blue-title-border: #3c96ff;
+  --color-xp-blue-border: #7a96df;
+  --color-xp-blue-text: #000080;
+
+  --color-xp-beige: #ece9d8;
+  --color-xp-beige-dark: #d3cfc1;
+  --color-xp-white: #fff;
+  --color-xp-gray: #808080;
+  --color-xp-gray-dark: #666;
+  --color-xp-gray-border: #5c5142;
+  --color-xp-focus: #ffd700;
+
+  /* Status Colors */
+  --color-status-queued-bg: #ffffe0;
+  --color-status-queued-text: #92400e;
+  --color-status-queued-border: #ca8a04;
+
+  --color-status-accepted-bg: #87ceeb;
+  --color-status-accepted-text: #1e40af;
+  --color-status-accepted-border: #2563eb;
+
+  --color-status-sent-bg: #90ee90;
+  --color-status-sent-text: #166534;
+  --color-status-sent-border: #16a34a;
+
+  --color-status-failed-bg: #ffb6c1;
+  --color-status-failed-text: #991b1b;
+  --color-status-failed-border: #dc2626;
+
+  /* Window Control Colors */
+  --color-control-minimize-from: #60a5fa;
+  --color-control-minimize-to: #2563eb;
+  --color-control-minimize-border: #93c5fd;
+  --color-control-close-from: #f87171;
+  --color-control-close-to: #dc2626;
+  --color-control-close-border: #fca5a5;
+
+  /* Windows XP Main Font */
+  --font-xp: Tahoma, Arial, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    font-family: var(--font-xp);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Root Styles */
+.app-container {
+  @apply min-h-screen;
+  background: linear-gradient(
+    to bottom,
+    var(--color-xp-blue-light) 0%,
+    var(--color-xp-blue-bright) 50%,
+    var(--color-xp-blue-light) 100%
+  );
+  font-family: var(--font-xp);
+}
+
+.main-wrapper {
+  @apply flex items-center justify-center min-h-screen p-8;
+}
+
+.main-content {
+  @apply w-full max-w-6xl;
+}
+
+/* Window Title Bar */
+.window-title-bar {
+  @apply flex items-center justify-between px-1 py-0.5 rounded-t-lg;
+  background: linear-gradient(
+    to bottom,
+    var(--color-xp-blue-title) 0%,
+    var(--color-xp-blue) 50%,
+    var(--color-xp-blue-dark) 51%,
+    #06f 100%
+  );
+  border-top: 3px solid var(--color-xp-blue-title-border);
+  border-left: 3px solid var(--color-xp-blue-title-border);
+  border-right: 3px solid var(--color-xp-blue-dark);
+}
+
+.window-title-left {
+  @apply flex items-center gap-2;
+}
+
+.window-icon {
+  @apply w-4 h-4 bg-white rounded text-center;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.window-title-text {
+  @apply text-white font-bold text-sm;
+}
+
+.window-title-link {
+  @apply flex flex-row text-white text-xs gap-0.5;
+}
+
+.window-title-link:hover span {
+  @apply underline;
+}
+
+.window-controls {
+  @apply flex gap-1;
+}
+
+.window-control-btn {
+  @apply w-5 h-5 flex items-center justify-center text-xs font-bold text-white rounded-sm border cursor-not-allowed;
+}
+
+.window-control-btn.minimize,
+.window-control-btn.maximize {
+  background: linear-gradient(
+    to bottom,
+    var(--color-control-minimize-from),
+    var(--color-control-minimize-to)
+  );
+  border-color: var(--color-control-minimize-border);
+}
+
+.window-control-btn.close {
+  background: linear-gradient(
+    to bottom,
+    var(--color-control-close-from),
+    var(--color-control-close-to)
+  );
+  border-color: var(--color-control-close-border);
+}
+
+/* Window Content */
+.window-content {
+  @apply p-6;
+  background-color: var(--color-xp-beige);
+  border: 4px solid;
+  border-left: 3px solid var(--color-xp-white);
+  border-top: 3px solid var(--color-xp-white);
+  border-right: 3px solid var(--color-xp-blue-dark);
+  border-bottom: 3px solid var(--color-xp-blue-dark);
+  @apply rounded-b-lg;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.window-content-flex {
+  @apply flex flex-col gap-4 md:flex-row;
+}
+
+/* Panel Styles */
+.panel {
+  @apply w-full p-4 rounded border-2;
+  background: linear-gradient(
+    to bottom,
+    var(--color-xp-white),
+    var(--color-xp-beige)
+  );
+  border-color: var(--color-xp-blue-border);
+  @apply shadow-lg;
+}
+
+.panel-half {
+  @apply w-full md:w-1/2;
+}
+
+.panel-header {
+  @apply px-2 py-1 mb-4 text-white font-bold text-sm rounded;
+  background: linear-gradient(
+    to right,
+    var(--color-xp-blue),
+    var(--color-xp-blue-light)
+  );
+}
+
+.panel-header-flex {
+  @apply flex justify-between;
+}
+
+/* Form Styles */
+.form-container {
+  @apply w-full flex flex-col gap-4;
+}
+
+.form-group {
+  @apply flex flex-col;
+}
+
+.form-label {
+  @apply block font-bold text-sm mb-1;
+  color: var(--color-xp-blue-text);
+}
+
+.form-input,
+.form-textarea {
+  @apply w-full px-2 py-1 border-2 bg-white text-black rounded-sm;
+  border-color: var(--color-xp-blue-dark);
+  font-family: var(--font-xp);
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  @apply outline-none;
+  border-color: var(--color-xp-focus);
+}
+
+.form-input.error,
+.form-textarea.error {
+  border-color: var(--color-status-failed-border);
+}
+
+.form-textarea {
+  @apply resize-none;
+}
+
+/* Button Styles */
+.btn-group {
+  @apply flex gap-2;
+}
+
+.btn {
+  @apply px-4 py-2 text-sm font-bold text-black rounded border-2 cursor-pointer shadow-md;
+  background: linear-gradient(
+    to bottom,
+    var(--color-xp-beige) 0%,
+    var(--color-xp-beige) 50%,
+    var(--color-xp-beige-dark) 100%
+  );
+  border-top-color: var(--color-xp-white);
+  border-left-color: var(--color-xp-white);
+  border-bottom-color: var(--color-xp-gray-border);
+  border-right-color: var(--color-xp-gray-border);
+}
+
+.btn:hover {
+  @apply shadow-sm;
+}
+
+.btn:active {
+  @apply shadow-inner;
+}
+
+.btn:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white;
+  background-color: var(--color-xp-blue);
+  border-color: var(--color-xp-blue);
+}
+
+.btn-secondary {
+  @apply text-black;
+  background: linear-gradient(
+    to bottom,
+    var(--color-xp-beige),
+    var(--color-xp-beige-dark)
+  );
+  border-color: var(--color-xp-blue-border);
+}
+
+/* Messages List */
+.messages-list {
+  @apply flex flex-col gap-2 min-h-96 h-96 max-h-96 overflow-y-auto pr-2;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-xp-blue-border) var(--color-xp-beige);
+}
+
+/* Message Card */
+.message-card {
+  @apply p-3 bg-white border-2 rounded shadow;
+  border-top-color: var(--color-xp-white);
+  border-left-color: var(--color-xp-white);
+  border-bottom-color: var(--color-xp-gray);
+  border-right-color: var(--color-xp-gray);
+}
+
+.message-header {
+  @apply flex justify-between items-start mb-2;
+}
+
+.message-phone {
+  @apply font-bold text-sm;
+  color: var(--color-xp-blue-text);
+}
+
+.message-phone-with-icon {
+  @apply flex items-center gap-2;
+}
+
+.message-body {
+  @apply text-sm text-black mb-2;
+}
+
+.message-footer {
+  @apply text-xs;
+  color: var(--color-xp-gray-dark);
+}
+
+.message-footer-flex {
+  @apply flex justify-between;
+}
+
+/* Status Badge */
+.status-badge {
+  @apply text-xs px-2 py-1 font-bold border rounded;
+}
+
+.status-queued {
+  background-color: var(--color-status-queued-bg);
+  color: var(--color-status-queued-text);
+  border-color: var(--color-status-queued-border);
+}
+
+.status-accepted {
+  background-color: var(--color-status-accepted-bg);
+  color: var(--color-status-accepted-text);
+  border-color: var(--color-status-accepted-border);
+}
+
+.status-sent,
+.status-delivered {
+  background-color: var(--color-status-sent-bg);
+  color: var(--color-status-sent-text);
+  border-color: var(--color-status-sent-border);
+}
+
+.status-failed {
+  background-color: var(--color-status-failed-bg);
+  color: var(--color-status-failed-text);
+  border-color: var(--color-status-failed-border);
+}
+
+/* Utility Classes */
+.text-empty {
+  @apply py-8;
+  color: var(--color-xp-gray);
+}
+
+.icon-small {
+  @apply w-4 h-4;
+  color: var(--color-xp-blue-text);
+}
+
+.icon-xs {
+  @apply w-3 h-3;
+}
+
+.icon-inline {
+  @apply inline-block w-4 h-4;
+}
+
+.icon-inline-left {
+  @apply mr-1;
+}
+
+.icon-inline-right {
+  @apply ml-1;
+}
+
+.icon-minus {
+  @apply mt-2;
+}
+
+.link-icon-left {
+  @apply mr-1;
+}
+
+.link-icon-right {
+  @apply ml-1;
+}
+
+/* Toaster/Sonner Windows XP Styles */
+:root {
+  --popover: var(--color-xp-beige);
+  --popover-foreground: var(--color-xp-blue-text);
+  --border: var(--color-xp-blue-dark);
+  --radius: 0;
+}
+
+.toaster {
+  --normal-bg: var(--color-xp-beige);
+  --normal-text: var(--color-xp-blue-text);
+  --normal-border: var(--color-xp-blue-dark);
+  --border-radius: 0;
+  font-family: var(--font-xp);
+}
+
+/* Toast Notification Styling */
+[data-sonner-toast],
+[data-sonner-toaster] [data-sonner-toast],
+.sonner-toast {
+  background: linear-gradient(
+    to bottom,
+    var(--color-xp-white),
+    var(--color-xp-beige)
+  ) !important;
+  border: 3px solid !important;
+  border-left-color: var(--color-xp-white) !important;
+  border-top-color: var(--color-xp-white) !important;
+  border-right-color: var(--color-xp-blue-dark) !important;
+  border-bottom-color: var(--color-xp-blue-dark) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
+  color: var(--color-xp-blue-text) !important;
+  font-family: var(--font-xp) !important;
+  font-size: 0.875rem !important;
+  padding: 0.75rem 1rem !important;
+  min-width: 300px !important;
+}
+
+[data-sonner-toast] [data-content],
+[data-sonner-toast] > div {
+  color: var(--color-xp-blue-text) !important;
+  font-family: var(--font-xp) !important;
+}
+
+[data-sonner-toast] [data-title],
+[data-sonner-toast] [data-description] {
+  color: var(--color-xp-blue-text) !important;
+  font-family: var(--font-xp) !important;
+  font-weight: normal !important;
+}
+
+[data-sonner-toast][data-type="success"],
+.sonner-toast[data-type="success"] {
+  background: linear-gradient(to bottom, #e8f5e9, #c8e6c9) !important;
+}
+
+[data-sonner-toast][data-type="error"],
+.sonner-toast[data-type="error"] {
+  background: linear-gradient(to bottom, #ffebee, #ffcdd2) !important;
+}
+
+[data-sonner-toast][data-type="warning"],
+.sonner-toast[data-type="warning"] {
+  background: linear-gradient(to bottom, #fff3e0, #ffe0b2) !important;
+}
+
+[data-sonner-toast][data-type="info"],
+.sonner-toast[data-type="info"] {
+  background: linear-gradient(to bottom, #e3f2fd, #bbdefb) !important;
+}
+
+[data-sonner-toast] [data-close-button],
+[data-sonner-toast] button[aria-label="Close"],
+.sonner-toast button {
+  background: linear-gradient(
+    to bottom,
+    var(--color-xp-beige) 0%,
+    var(--color-xp-beige) 50%,
+    var(--color-xp-beige-dark) 100%
+  ) !important;
+  border: 2px solid !important;
+  border-top-color: var(--color-xp-white) !important;
+  border-left-color: var(--color-xp-white) !important;
+  border-bottom-color: var(--color-xp-gray-border) !important;
+  border-right-color: var(--color-xp-gray-border) !important;
+  border-radius: 0 !important;
+  color: var(--color-xp-blue-text) !important;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  font-family: var(--font-xp) !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+}
+
+[data-sonner-toast] [data-close-button]:hover,
+[data-sonner-toast] button[aria-label="Close"]:hover,
+.sonner-toast button:hover {
+  background: linear-gradient(
+    to bottom,
+    var(--color-xp-beige-dark) 0%,
+    var(--color-xp-beige) 50%,
+    var(--color-xp-beige-dark) 100%
+  ) !important;
+}
+
+[data-sonner-toast] [data-close-button]:active,
+[data-sonner-toast] button[aria-label="Close"]:active,
+.sonner-toast button:active {
+  border-top-color: var(--color-xp-gray-border) !important;
+  border-left-color: var(--color-xp-gray-border) !important;
+  border-bottom-color: var(--color-xp-white) !important;
+  border-right-color: var(--color-xp-white) !important;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+.toaster-icon {
+  @apply w-4 h-4;
+  color: var(--color-xp-blue-text);
+}
+
+.toaster-icon-spin {
+  @apply w-4 h-4;
+  color: var(--color-xp-blue-text);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
