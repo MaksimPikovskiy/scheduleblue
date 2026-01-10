@@ -8,6 +8,7 @@ interface WindowTitleBarProps {
     isNext: boolean;
 }
 
+// Windows XP style window title bar component
 const WindowTitleBar = ({ title, link, linkText, isNext }: WindowTitleBarProps) => {
     return (
         <div className="window-title-bar">

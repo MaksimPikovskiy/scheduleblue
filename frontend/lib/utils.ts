@@ -1,3 +1,4 @@
+// Get CSS class for status color
 export function getStatusColor(status: string): string {
   switch (status) {
     case "SENT":

@@ -17,6 +17,7 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Scheduler is running on port ${PORT}`);
 
+    // Start the queue processor
     startQueueProcessor();
 });
 

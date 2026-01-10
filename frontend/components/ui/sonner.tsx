@@ -10,6 +10,8 @@ import {
 import { useTheme } from "next-themes"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 
+// Toaster component from shadcn/ui integrated with sonner
+// Modified to use Windows XP theme
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme()
 

@@ -27,6 +27,7 @@ export default function Home() {
   useEffect(() => {
     fetchMessages();
 
+    // Set interval to refresh messages every 5 seconds
     const interval = setInterval(fetchMessages, 5000);
     return () => clearInterval(interval);
   }, []);

@@ -14,12 +14,14 @@ interface GatewayResponse {
 
 async function callGateway(messageId: string, to: string, body: string): Promise<GatewayResponse> {
   return new Promise((resolve, _) => {
+    // Spawn the gateway process
     const gatewayPath = path.join(__dirname, '../../gateway/send-message.js');
     const gatewayProcess = spawn('node', [gatewayPath, messageId, to, body]);
 
     let stdout = '';
     let stderr = '';
 
+    // Capture stdout and stderr
     gatewayProcess.stdout.on('data', (data) => {
       stdout += data.toString();
     });
@@ -28,6 +30,7 @@ async function callGateway(messageId: string, to: string, body: string): Promise
       stderr += data.toString();
     });
 
+    // Handle process exit
     gatewayProcess.on('close', (code) => {
       if (code === 0) {
         try {
@@ -43,6 +46,7 @@ async function callGateway(messageId: string, to: string, body: string): Promise
       }
     });
 
+    // Handle process errors
     gatewayProcess.on('error', (error) => {
       console.error('Gateway process error:', error);
       resolve({ status: 'FAILED', error: error.message });
@@ -61,16 +65,20 @@ async function processNextMessage() {
 
     console.log(`Processing message ${message.id} to ${message.to}`);
 
+    // Update status to ACCEPTED
     const accepted = await updateMessageStatus(message.id, 'ACCEPTED');
     if (!accepted) {
       console.error(`Failed to update message ${message.id} to ACCEPTED`);
       return;
     }
 
+    // Wait for the configured waiting duration
     await sleep(ACCEPTED_STATUS_PERMANENCE_MS);
 
+    // Call the gateway to send the message
     const result = await callGateway(message.id, message.to, message.body);
 
+    // Update message status based on gateway response
     const updatedStatus = await updateMessageStatus(message.id, result.status);
     if (!updatedStatus) {
       console.error(`Failed to update message ${message.id} to ${result.status}`);
@@ -84,8 +92,10 @@ export function startQueueProcessor() {
   console.log(`Queue processor started. Processing ${MESSAGES_PER_HOUR} message(s) per hour.`);
   console.log(`Interval: ${INTERVAL_MS / 1000} seconds`);
 
+  // Immediately process the next message on start
   processNextMessage();
 
+  // Set interval to process messages
   setInterval(processNextMessage, INTERVAL_MS);
 }
 

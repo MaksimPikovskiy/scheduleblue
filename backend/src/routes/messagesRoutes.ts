@@ -4,11 +4,13 @@ import { formatPhoneNumber } from '../../lib/utils';
 
 const router: Router = express.Router();
 
+// Get all messages
 router.get("/", async (_, res) => {
     const messages = await prisma.message.findMany({ orderBy: { createdAt: 'desc' } });
     res.json(messages);
 });
 
+// Schedule a new message
 router.post("/", async (req, res) => {
     const { to, body } = req.body;
 
@@ -41,6 +43,7 @@ router.post("/", async (req, res) => {
     }
 });
 
+// Fetch the next queued message in FIFO order
 router.get("/next_message", async (_, res) => {
     const nextMessage = await prisma.message.findFirst({
         where: { status: 'QUEUED' },
@@ -54,6 +57,7 @@ router.get("/next_message", async (_, res) => {
     res.json(nextMessage);
 });
 
+// Update message status
 router.patch("/:id/status", async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;

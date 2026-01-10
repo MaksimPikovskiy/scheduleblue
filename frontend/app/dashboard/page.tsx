@@ -8,6 +8,7 @@ import { getStatusColor } from "@/lib/utils";
 import { WindowTitleBar } from "@/components/ui/window-title-bar";
 import parsePhoneNumberFromString from "libphonenumber-js";
 
+// Define filter types for messages
 type FilterType = "all" | "scheduled" | "accepted" | "sent" | "delivered" | "failed";
 
 export default function Dashboard() {
@@ -31,10 +32,12 @@ export default function Dashboard() {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchMessages();
 
+        // Set interval to refresh messages every 5 seconds
         const interval = setInterval(fetchMessages, 5000);
         return () => clearInterval(interval);
     }, []);
 
+    // Filter messages based on selected filter
     const filteredMessages = messages.filter((msg) => {
         switch (filter) {
             case "scheduled":
@@ -52,6 +55,7 @@ export default function Dashboard() {
         }
     });
 
+    // Compute statistics for each type of message status
     const stats = {
         total: messages.length,
         queued: messages.filter((m) => m.status === "QUEUED").length,

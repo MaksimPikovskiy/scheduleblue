@@ -11,6 +11,7 @@ export interface Message {
 
 const API_BASE_URL = process.env.API_BASE_URL || `http://localhost:${process.env.PORT || 8080}/api`;
 
+// Fetch the next queued message in FIFO order
 export async function getNextMessage(): Promise<Message | null> {
     try {
         const response = await fetch(`${API_BASE_URL}/messages/next_message`);
@@ -27,6 +28,7 @@ export async function getNextMessage(): Promise<Message | null> {
     }
 }
 
+// Update message status
 export async function updateMessageStatus(messageId: string, status: MessageStatus): Promise<boolean> {
     try {
         const response = await fetch(`${API_BASE_URL}/messages/${messageId}/status`, {
